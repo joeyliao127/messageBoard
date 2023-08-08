@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style/reset.css" />
+    <link rel="stylesheet" href="/style/style.css" />
+    <link rel="icon" href="/pic/aquabox-.png" />
+    <title>Home Page</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <section class="top-bar">
+        <div class="logo">
+          <img src="/pic/aquabox-.png" alt="logo" />
+          <h1>Aquaboxes</h1>
+        </div>
+        <nav>
+          <ul>
+            <a href="">Page1</a>
+            <a href="">Page2</a>
+            <a href="">Page3</a>
+            <a href="">Page4</a>
+          </ul>
+        </nav>
+      </section>
+      <section class="form-wrapper">
+        <div class="form-container signin">
+          <h3>SINGIN</h3>
+          <form action="/sigin" method="post" class="form-sigin form">
+            <div class="input-item">
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                required
+              />
+              <img src="/pic/email.png" alt="person-icon" />
+            </div>
+            <div class="input-item">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <img src="/pic/lock.png" alt="password-icon" />
+            </div>
+            <a href="">Forget your password?</a>
+            <button id="sign-btn">Login</button>
+            <p class="signup-message">
+              Don't have an account? <span onclick="register">Register</span>
+            </p>
+          </form>
+        </div>
+        <div class="form-container signup">
+          <h3>SINGUP</h3>
+          <form action="/signup" method="post" class="form-signup form">
+            <div class="input-item">
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Name"
+                required
+              />
+              <img src="/pic/person.png" alt="person-icon" />
+            </div>
+            <div class="input-item">
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                required
+              />
+              <img src="/pic/email.png" alt="person-icon" />
+            </div>
+            <div class="input-item">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <img src="/pic/lock.png" alt="password-icon" />
+            </div>
+            <button id="sign-btn">REGISTER</button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

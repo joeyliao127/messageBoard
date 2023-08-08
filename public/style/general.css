@@ -1,0 +1,37 @@
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+.main {
+  width: 450px;
+  margin: 20vh auto;
+}
+
+.introText {
+  background-color: #213140;
+  padding: 20px 30px;
+  display: flex;
+}
+.introText h1 {
+  color: white;
+  font-size: 25px;
+  font-weight: 400;
+  margin: auto;
+}
+.message {
+  width: 100%;
+  padding-block: 30px;
+  box-sizing: border-box;
+  text-align: center;
+  border: 1px solid gray;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.message p {
+  font-size: 25px;
+}
+.message a {
+  font-size: 20px;
+}
