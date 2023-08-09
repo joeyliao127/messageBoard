@@ -25,9 +25,9 @@
         </nav>
       </section>
       <section class="form-wrapper">
+        <h3>SINGIN</h3>
         <div class="form-container signin">
-          <h3>SINGIN</h3>
-          <form action="/sigin" method="post" class="form-sigin form">
+          <form action="/signin" method="post" class="form-sigin form">
             <div class="input-item">
               <input
                 type="text"
@@ -46,48 +46,39 @@
               />
               <img src="/pic/lock.png" alt="password-icon" />
             </div>
-            <a href="">Forget your password?</a>
-            <button id="sign-btn">Login</button>
+            <a href="">Forgot your password?</a>
+            <button class="sign-btn">Login</button>
             <p class="signup-message">
-              Don't have an account? <span onclick="register">Register</span>
+              Don't have an account? <span class="span-register">Register</span>
             </p>
           </form>
         </div>
         <div class="form-container signup">
-          <h3>SINGUP</h3>
           <form action="/signup" method="post" class="form-signup form">
             <div class="input-item">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                placeholder="Name"
-                required
-              />
+              <input type="text" name="name" id="name" placeholder="Name" />
               <img src="/pic/person.png" alt="person-icon" />
+              <img src="/pic/error.png" alt="error" />
             </div>
             <div class="input-item">
-              <input
-                type="text"
-                name="username"
-                placeholder="Username"
-                required
-              />
+              <input type="text" name="username" placeholder="Username" />
               <img src="/pic/email.png" alt="person-icon" />
+              <img src="/pic/error.png" alt="error" />
             </div>
+
             <div class="input-item">
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                required
-              />
+              <input type="password" name="password" placeholder="Password" />
               <img src="/pic/lock.png" alt="password-icon" />
+              <img src="/pic/error.png" alt="error" />
             </div>
-            <button id="sign-btn">REGISTER</button>
+            <button class="sign-btn">REGISTER</button>
           </form>
+          <div class="back">
+            <p>Back to Signin</p>
+          </div>
         </div>
       </section>
     </div>
+    <script src="/javascript/index.js"></script>
   </body>
 </html>

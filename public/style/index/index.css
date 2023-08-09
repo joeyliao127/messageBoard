@@ -55,24 +55,25 @@ body {
   border-radius: 30px;
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0px 0px 10px rbga(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(15px);
           backdrop-filter: blur(15px);
   display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   padding: 50px;
+}
+.form-wrapper h3 {
+  color: white;
+  font-size: 35px;
+  font-weight: 700;
+  margin: 0 auto 30px auto;
 }
 
 .form-container {
   width: 100%;
   display: flex;
   flex-direction: column;
-}
-.form-container h3 {
-  color: white;
-  font-size: 35px;
-  font-weight: 700;
-  margin: 0 auto 30px auto;
 }
 
 .form-container {
@@ -103,6 +104,15 @@ body {
   right: 20px;
   top: 10px;
 }
+.input-item img[alt=error] {
+  display: none;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  right: -35px;
+  top: 10px;
+  animation: top_down 0.5s;
+}
 .input-item input {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -127,7 +137,7 @@ body {
   margin-left: 20px;
 }
 
-#sign-btn {
+.sign-btn {
   width: 150px;
   height: 50px;
   border: 2px solid #037f8c;
@@ -141,7 +151,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
-#sign-btn:hover {
+.sign-btn:hover {
   color: white;
   background-color: #037f8c;
 }
@@ -159,15 +169,50 @@ body {
   text-decoration: underline;
 }
 
+.back {
+  width: 100%;
+  display: flex;
+}
+.back p {
+  color: #037f8c;
+  text-decoration: underline;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: auto;
+}
+
 .form-container.signup {
   display: none;
 }
 
 @font-face {
   font-family: edu;
-  src: url(/public/font/EduSABeginner-VariableFont_wght.ttf);
-}
-@font-face {
-  font-family: edu;
   src: url(/font/EduSABeginner-VariableFont_wght.ttf);
+}
+@keyframes top_down {
+  0% {
+    transform: translateY(20px);
+  }
+  12% {
+    transform: translateY(0px);
+  }
+  25% {
+    transform: translateY(17px);
+  }
+  37% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(13px);
+  }
+  62% {
+    transform: translateY(0px);
+  }
+  75% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }/*# sourceMappingURL=index.css.map */

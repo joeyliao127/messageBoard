@@ -1,4 +1,14 @@
 @charset "UTF-8";
+body {
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: flex;
+  flex-direction: column;
+}
+
 .wrapper {
   width: 100%;
   height: 100%;
@@ -6,6 +16,7 @@
 
 .search form {
   display: flex;
+  gap: 15px;
   align-items: center;
 }
 .search input {
@@ -39,8 +50,80 @@
   height: 40px; /* 设置按钮高度 */
   background-image: url(/pic/search.png);
   background-size: cover; /* 图像自适应尺寸 */
-  background-color: rgb(10, 93, 86);
+  background-color: #0e6e89;
   border: none; /* 移除按钮边框 */
   color: transparent; /* 文字透明，让图像显示出来 */
   cursor: pointer; /* 添加指针样式 */
+}
+
+main {
+  display: flex;
+  height: calc(100vh - 100px);
+  background-image: url(/pic/background.jpeg);
+  background-size: cover;
+  background-color: #188090;
+}
+
+.welcome {
+  width: 250px;
+  flex-grow: 0;
+  padding: 20px;
+  position: relative;
+  background-color: #cbdde1;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.member {
+  background-color: #0e6e89;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  top: 30px;
+}
+.member p {
+  color: #f2f2f0;
+  font-size: 25px;
+  font-weight: 600;
+  font-family: edu;
+}
+.member img {
+  width: 30px;
+  height: 30px;
+  transition: all 0.5s ease-in-out;
+}
+.member:hover img {
+  animation: shark 1s;
+}
+
+.msg-wrapper {
+  height: calc(100vh - 100px);
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 50px 70px;
+}
+.msg-wrapper .msg-ctn {
+  height: calc(100vh - 200px);
+  background-color: rgba(173, 216, 230, 0.7);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+}
+
+@keyframes shark {
+  0% {
+    transform: rotate(20deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(20deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }/*# sourceMappingURL=member.css.map */
