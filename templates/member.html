@@ -18,7 +18,12 @@
         </div>
         <div class="search">
           <form action="/search" method="get">
-            <input type="text" name="search" id="search" placeholder="Search" />
+            <input
+              type="text"
+              name="search"
+              id="search"
+              placeholder="Search for a specific member's messages"
+            />
             <button></button>
           </form>
         </div>
@@ -29,14 +34,30 @@
       <main>
         <div class="welcome">
           <div class="member">
-            <p>Hi {{name}}</p>
+            <p id="name"></p>
             <img src="/pic/Hi.png" alt="Hi" />
+          </div>
+          <div class="comment">
+            <form action="/createMsg" method="post" id="msg_form">
+              <textarea
+                name="comment"
+                id="comment"
+                cols="30"
+                rows="10"
+                placeholder="Share your thoughts"
+              ></textarea>
+              <button>Submit</button>
+            </form>
           </div>
         </div>
         <div class="msg-wrapper">
           <div class="msg-ctn"></div>
+          <div class="loadmore">
+            <p>LoadMore</p>
+          </div>
         </div>
       </main>
     </div>
+    <script src="/javascript/member.js"></script>
   </body>
 </html>

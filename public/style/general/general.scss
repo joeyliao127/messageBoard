@@ -1,11 +1,10 @@
 .top-bar {
   background-color: #00709e;
-  height: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
-  //   height: 70px;
 }
 .logo {
   display: flex;
