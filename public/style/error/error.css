@@ -70,7 +70,7 @@ body {
 }
 .error h3 {
   color: white;
-  font-size: 35px;
+  font-size: 30px;
   font-weight: 700;
   margin: auto;
 }
@@ -83,5 +83,5 @@ body {
 
 @font-face {
   font-family: edu;
-  src: url(/public/font/EduSABeginner-VariableFont_wght.ttf);
+  src: url(/font/EduSABeginner-VariableFont_wght.ttf);
 }/*# sourceMappingURL=error.css.map */

@@ -74,13 +74,27 @@ function listen_btn() {
 
   del_btn.forEach((btn) => {
     btn.addEventListener("click", async () => {
-      response = await fetch("/getUserInfo");
-      userInfo = await response.json();
-      console.log(`userID = ${userInfo.id}`);
-      msg_id = btn.getAttribute("msg_id");
-      delMsg = await fetch(`/delMsg/${userInfo.id}/${msg_id}`);
-      console.log(`傳送msg id = ${msg_id}`);
-      window.location = "/member";
+      yes = confirm("確定刪除留言？");
+      console.log((yes = `${yes}`));
+      if (yes) {
+        response = await fetch("/getUserInfo");
+        userInfo = await response.json();
+        console.log(`userID = ${userInfo.id}`);
+        msg_id = btn.getAttribute("msg_id");
+        data = {
+          user_id: userInfo.id,
+          msg_id: msg_id,
+        };
+        delMsg = await fetch("/deleteMessage", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        window.location = "/member";
+      }
     });
   });
   edit_btn.forEach((btn) => {

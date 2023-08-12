@@ -103,7 +103,7 @@ def getComment(count: int):
     print(f"------------------getComment裡面未處理的result---------------\n{queryResult}")
     for data in queryResult:
         #data格式為：{'id': 2, 'name': 'Joey', 'time': datetime.datetime(2022, 6, 18, 0, 0), 'content': 'Hi here is Joey'}
-        date = data["time"]        
+        date = data["time"].date()        
         date = date.isoformat()
         result.append({
             "id": data["id"],
@@ -124,7 +124,7 @@ def getComment(count: int):
     print("-----------------getComment JSON dumps之後的res-------------------", res)
     return res
 
-def queryMsg(id, content):
+def insertMsg(id, content):
     query = f"INSERT INTO message(member_id, content) VALUES({id},'{content}')"
     print(f"--------傳送到createMsg的query為-----------\n{query}")
     try:
@@ -151,11 +151,12 @@ def signin():
         session["username"] = data["username"]
         return redirect("member")
     else:
-        return redirect(url_for("error", message = "帳號或密碼錯誤"))
+        return redirect(url_for("error", message = "帳號或密碼輸入錯誤"))
 
 @app.route("/signout")
 def signout():
     session["status"] = False
+    session["id"]=""
     session["name"] = ""
     session["username"] = ""
     return redirect("/")
@@ -199,11 +200,10 @@ def loadMore(count):
     print(f"loadMore回傳的API---------------------------------------------\n{result}")
     return result
 
-@app.route("/createMsg", methods=["POST"])
-def createMsg():
+@app.route("/createMessage", methods=["POST"])
+def createMessage():
    content = request.form["comment"]
-   queryMsg(id=session["id"], content=content)
-   print("這是210行")
+   insertMsg(id=session["id"], content=content)
    return redirect("member")
 
 @app.route("/getUserInfo")
@@ -214,10 +214,12 @@ def getUserInfo():
     res = json.dumps(res)
     return res
 
-@app.route("/delMsg/<verify_id>/<msg_id>")
-def delMsg(verify_id, msg_id):
-    print(f"----------後端接收到del請求msg_id = {msg_id}--------------")
-    print(f"session id = {session['id']}, verify id = {int(verify_id)}")
+@app.route("/deleteMessage/", methods=["POST"])
+def delMsg():
+    data = request.json
+    verify_id = data["user_id"]
+    msg_id = data["msg_id"]
+    print(f"data = {data}\nverify = {verify}\nmsg_id={msg_id}")
     if(int(verify_id) == session["id"]):
         print("驗證通過，執行刪除Fn")
         qureyStr = f"DELETE FROM message where id = {msg_id}"
