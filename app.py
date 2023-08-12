@@ -1,7 +1,7 @@
 from flask import *
 import mysql.connector
 import json
-import datetime
+# import datetime
 app = Flask(
     __name__,
     static_folder="public",
@@ -97,13 +97,13 @@ def verify(username: str, password: str):
         return None
 
 def getComment(count: int):
-    qureyStr = f"SELECT member.id, member.name, member.time, message.content, message.id as msg_id FROM member JOIN message ON member.id = message.member_id ORDER BY message.id DESC LIMIT 5 OFFSET {count} ;"
-    queryResult =  find(qureyStr= qureyStr)
+    qureyStr = f"SELECT member.id, member.name, member.time, message.content, message.id as msg_id FROM member JOIN message ON member.id = message.member_id ORDER BY message.id DESC LIMIT 5 OFFSET {count};"
+    queryResult = find(qureyStr= qureyStr)
     result = []
     print(f"------------------getComment裡面未處理的result---------------\n{queryResult}")
     for data in queryResult:
         #data格式為：{'id': 2, 'name': 'Joey', 'time': datetime.datetime(2022, 6, 18, 0, 0), 'content': 'Hi here is Joey'}
-        date = data["time"].date()
+        date = data["time"]        
         date = date.isoformat()
         result.append({
             "id": data["id"],
@@ -129,6 +129,7 @@ def queryMsg(id, content):
     print(f"--------傳送到createMsg的query為-----------\n{query}")
     try:
         cursor.execute(query)
+        connection.commit()
     except Exception as ex:
         print(f"message新增失敗，錯誤訊息：{ex}")
 
@@ -202,6 +203,7 @@ def loadMore(count):
 def createMsg():
    content = request.form["comment"]
    queryMsg(id=session["id"], content=content)
+   print("這是210行")
    return redirect("member")
 
 @app.route("/getUserInfo")

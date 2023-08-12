@@ -71,6 +71,7 @@ function msg_item_maker(userInfo, msgColleciton) {
 function listen_btn() {
   const del_btn = document.querySelectorAll(".del-btn");
   const edit_btn = document.querySelectorAll(".edit-btn");
+
   del_btn.forEach((btn) => {
     btn.addEventListener("click", async () => {
       response = await fetch("/getUserInfo");
