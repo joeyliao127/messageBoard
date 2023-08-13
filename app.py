@@ -30,9 +30,10 @@ except Exception as ex:
 cursor = connection.cursor(dictionary=True)
 
 def createMember(name, username, password):
-    queryString = f"INSERT INTO member (name, username, password) VALUES ('{name}', '{username}', '{password}')"
+    queryString = "INSERT INTO member (name, username, password) VALUES (%s,%s,%s)"
+    qureyValue = (name, username, password)
     try:
-        cursor.execute(queryString)
+        cursor.execute(queryString, qureyValue)
         connection.commit()
         return True
     except Exception as ex:
@@ -43,7 +44,7 @@ def createMember(name, username, password):
 def find(qurey: str, qureyValue: tuple):
     try:
         print(f"============find()要執行的queryStr============\n{(qurey, qureyValue)}")
-        cursor.execute(qurey, (qureyValue))
+        cursor.execute(qurey, qureyValue)
         result = cursor.fetchall()
         res = []
         for item in result:
@@ -55,20 +56,15 @@ def find(qurey: str, qureyValue: tuple):
         print(f"來自DB的錯誤訊息：{ex}")
         return False
 
-def update(queryStr):
-    try:
-        cursor.execute(queryStr["queryStr"])
-        return True
-    except Exception as ex:
-        print("更新失敗...")
-        print(f"來自DB的錯誤訊息為：{ex}")
-        return False
+# def update(queryStr):
+#     try:
+#         cursor.execute(queryStr["queryStr"])
+#         return True
+#     except Exception as ex:
+#         print("更新失敗...")
+#         print(f"來自DB的錯誤訊息為：{ex}")
+#         return False
     
-def delMsg(qureyStr):
-    try:   
-        cursor.execute(qureyStr)
-    except Exception as ex:
-        print(ex)
 
 def verify(username: str, password: str):
     qureyStr = "SELECT id,name, username FROM member where username = %s and password = %s"
@@ -102,16 +98,15 @@ def getComment(count: int):
         }
     }
     res["msg"] = result
-    print("-----------------getComment JSON dumps之前的res-------------------", res)
     res = json.dumps(res)
-    print("-----------------getComment JSON dumps之後的res-------------------", res)
+    print("-----------------getComment return value-------------------", res)
     return res
 
 def insertMsg(id, content):
-    query = f"INSERT INTO message(member_id, content) VALUES({id},'{content}')"
-    print(f"--------傳送到createMsg的query為-----------\n{query}")
+    qureyStr = "INSERT INTO message(member_id, content) VALUES(%s,%s)"
+    qureyValue = (id, content)
     try:
-        cursor.execute(query)
+        cursor.execute(qureyStr, qureyValue)
         connection.commit()
     except Exception as ex:
         print(f"message新增失敗，錯誤訊息：{ex}")
@@ -161,8 +156,8 @@ def signup():
     name = request.form["name"]
     username = request.form["username"]
     password = request.form["password"]
-    queryStr = "SELECT name FROM member WHERE name = '%s'"
-    qureyValue = (username)
+    queryStr = "SELECT name FROM member WHERE name = %s"
+    qureyValue = (username,)
     result = find(queryStr, qureyValue)
     print(f"檢查註冊的使用者，是否有返回帳號：{result}")
     if(result):
@@ -180,7 +175,7 @@ def init():
 
 @app.route("/loadMore/<count>")
 def loadMore(count):
-    result = getComment(count=count)
+    result = getComment(count=int(count))
     print(f"loadMore回傳的API---------------------------------------------\n{result}")
     return result
 
@@ -199,16 +194,16 @@ def getUserInfo():
     return res
 
 @app.route("/deleteMessage/", methods=["POST"])
-def delMsg():
+def deleteMessage():
     data = request.json
     verify_id = data["user_id"]
     msg_id = data["msg_id"]
-    print(f"data = {data}\nverify = {verify}\nmsg_id={msg_id}")
+    qureyValue = (msg_id,)
     if(int(verify_id) == session["id"]):
         print("驗證通過，執行刪除Fn")
-        qureyStr = f"DELETE FROM message where id = {msg_id}"
+        qureyStr = f"DELETE FROM message where id = %s"
         try:
-            cursor.execute(qureyStr)
+            cursor.execute(qureyStr, qureyValue)
             connection.commit()
         except Exception as ex:
             print(f"刪除失敗，來自DB的錯誤訊息：{ex}")
@@ -218,10 +213,11 @@ def delMsg():
 
 @app.route("/searchMemberMsg/<member_name>")
 def searchMemberMsg(member_name):
-    qureyStr = "SELECT member.id, member.name, message.time, message.content, message.id as msg_id FROM member JOIN message ON member.name = %s ORDER BY message.id DESC "
+    qureyStr = "SELECT member.id, member.name, message.time, message.content, message.id as msg_id FROM member JOIN message ON member.id = message.member_id WHERE member.name = %s ORDER BY message.id DESC;"
+    print("要搜尋的人：", member_name)
     qureyValue = (member_name, )
     qureyResult = find(qurey=qureyStr, qureyValue=qureyValue)
-    print(f"========search route找到的資訊為：{qureyResult}")
+    print(f"========search route找到的資訊為：===============\n{qureyResult}")
     result = []
     for data in qureyResult:
         date = data["time"].date()        

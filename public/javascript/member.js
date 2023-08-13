@@ -15,7 +15,7 @@ let counter = 0;
 function msg_item_maker(userInfo, msgCollection) {
   const msg_parent = document.createElement("div");
   msg_parent.classList.add("msg_parent");
-  if (msgCollection.length < 5) {
+  if (msgCollection.length == 0) {
     loadMore.style.display = "none";
     // const msg_itme = document.createElement("div");
     // msg_itme.classList.add("msg-item");
@@ -41,7 +41,6 @@ function msg_item_maker(userInfo, msgCollection) {
         </div>	
         <div class="msg-right">	
             <div class="msg-btn">	
-                <button class="edit-btn" msg_id = ${msgCollection[i].msg_id}>edit</button>	
                 <button class="del-btn" msg_id = ${msgCollection[i].msg_id}>del</button>	
             </div>	
             <p>${msgCollection[i].date}</p>	
@@ -96,19 +95,18 @@ function listen_btn() {
           },
           body: JSON.stringify(data),
         });
-
         window.location = "/member";
       }
     });
   });
-  edit_btn.forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      response = await fetch("/getUserInfo");
-      userInfo = await response.json();
-      console.log("userInfo = ", userInfo);
-      console.log("編輯被點選");
-    });
-  });
+  // edit_btn.forEach((btn) => {
+  //   btn.addEventListener("click", async () => {
+  //     pa = btn.parentNode.parentNode;
+  //     response = await fetch("/getUserInfo");
+  //     userInfo = await response.json();
+  //     console.log("編輯被點選");
+  //   });
+  // });
 }
 
 async function init() {
@@ -144,13 +142,11 @@ search_form.addEventListener("submit", async (e) => {
   if (search_member) {
     const response = await fetch(`/searchMemberMsg/${search_member}`);
     const data = await response.json();
-
     let { userInfo, msg } = data;
-    console.log(`前端接收到的userInfo= ${userInfo}`);
-    console.log(`前端接收到的msg= ${msg}`);
     const msg_parent = document.querySelector(".msg_parent");
     loadMore.style.display = "none";
-    msg_ctn.removeChild(msg_parent);
+    msg_parent.remove();
+    console.log(`準備新增留言，目標對象為${search_member}`);
     msg_item_maker(userInfo, msg);
   } else {
     window.location = "/member";
