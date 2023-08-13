@@ -19,7 +19,6 @@ db_connection = {
 }
 
 try:
-    # 建立與資料庫的連線
     connection = mysql.connector.connect(**db_connection) 
     if connection.is_connected():
         print("Connected to the database!")
@@ -41,11 +40,11 @@ def createMember(name, username, password):
         print(f"來自DB的錯誤訊息：{ex}")
         return False
     
-def find(qureyStr: str):
+def find(qurey: str, qureyValue: tuple):
     try:
-        cursor.execute(qureyStr)
+        print(f"============find()要執行的queryStr============\n{(qurey, qureyValue)}")
+        cursor.execute(qurey, (qureyValue))
         result = cursor.fetchall()
-        print(f"------------查詢後的查詢結果為---------------：\n{result}")
         res = []
         for item in result:
             res.append(item)
@@ -55,14 +54,8 @@ def find(qureyStr: str):
         print("查詢失敗...")
         print(f"來自DB的錯誤訊息：{ex}")
         return False
-# find(qureyStr="select * from member")
 
-
-#請依照以下格式使用update()：
-#1. update(queryStr= )
-#2. update需為完整的句子，如 UPDATE member SET username='Wilson' WHERE id = 5
-#呼叫函式範例：delete(queryStr="UPDATE member SET username='Wilson' WHERE id = 5")
-def update(cursor, **queryStr):
+def update(queryStr):
     try:
         cursor.execute(queryStr["queryStr"])
         return True
@@ -71,36 +64,26 @@ def update(cursor, **queryStr):
         print(f"來自DB的錯誤訊息為：{ex}")
         return False
     
-# update(queryStr="UPDATE member SET username='Wilson' where id = 5")
-
-#請依照以下格式使用delete
-#1. delete(queryStr= )
-#2. queryStr需為完整的句子，如 DELETE FROM member WHERE name = 'Joey'
-#呼叫函式範例：delete(queryStr="DELETE FROM member where name = 'Joey'")
 def delMsg(qureyStr):
-    print(f"刪除的query為： {qureyStr}")
     try:   
         cursor.execute(qureyStr)
     except Exception as ex:
         print(ex)
 
-# delete(qureyStr="DELETE FROM member where name = 'AAA'")
-
 def verify(username: str, password: str):
-    queryStr = f"SELECT id,name, username FROM member where username = '{username}' and password = '{password}' "
-    
-    result = find(queryStr)
-    # print(f"-------------------verify中，從find取得的result-------------------\n{result}")
+    qureyStr = "SELECT id,name, username FROM member where username = %s and password = %s"
+    qureyValue = (username, password)
+    result = find(qureyStr, qureyValue)
     if(result):
         return result
     else:
         return None
 
 def getComment(count: int):
-    qureyStr = f"SELECT member.id, member.name, member.time, message.content, message.id as msg_id FROM member JOIN message ON member.id = message.member_id ORDER BY message.id DESC LIMIT 5 OFFSET {count};"
-    queryResult = find(qureyStr= qureyStr)
+    qureyStr = "SELECT member.id, member.name, message.time, message.content, message.id as msg_id FROM member JOIN message ON member.id = message.member_id ORDER BY message.id DESC LIMIT 5 OFFSET %s;"
+    count = (count,)
+    queryResult = find(qureyStr, count)
     result = []
-    print(f"------------------getComment裡面未處理的result---------------\n{queryResult}")
     for data in queryResult:
         #data格式為：{'id': 2, 'name': 'Joey', 'time': datetime.datetime(2022, 6, 18, 0, 0), 'content': 'Hi here is Joey'}
         date = data["time"].date()        
@@ -178,8 +161,9 @@ def signup():
     name = request.form["name"]
     username = request.form["username"]
     password = request.form["password"]
-    queryStr = f"SELECT name FROM member WHERE name = '{username}'"
-    result = find(queryStr)
+    queryStr = "SELECT name FROM member WHERE name = '%s'"
+    qureyValue = (username)
+    result = find(queryStr, qureyValue)
     print(f"檢查註冊的使用者，是否有返回帳號：{result}")
     if(result):
         return redirect(url_for("error", message="帳號已經被註冊"))
@@ -231,6 +215,33 @@ def delMsg():
     else:
         print("驗證失敗....")
     return "ok"
+
+@app.route("/searchMemberMsg/<member_name>")
+def searchMemberMsg(member_name):
+    qureyStr = "SELECT member.id, member.name, message.time, message.content, message.id as msg_id FROM member JOIN message ON member.name = %s ORDER BY message.id DESC "
+    qureyValue = (member_name, )
+    qureyResult = find(qurey=qureyStr, qureyValue=qureyValue)
+    print(f"========search route找到的資訊為：{qureyResult}")
+    result = []
+    for data in qureyResult:
+        date = data["time"].date()        
+        date = date.isoformat()
+        result.append({
+            "id": data["id"],
+            "name": data["name"],
+            "date": date,
+            "comment": data["content"],
+            "msg_id": data["msg_id"]
+        })
+    res = {
+            "userInfo":{
+                "id": session["id"],
+                "name": session["name"]
+            }
+        }
+    res["msg"] = result
+    res = json.dumps(res)
+    return res
 
 app.run(port=3000, debug=True, use_reloader=True)
 

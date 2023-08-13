@@ -1,18 +1,21 @@
 const member_name = document.querySelector("#name");
 const msg_ctn = document.querySelector(".msg-ctn");
-const msg_parent = document.createElement("div");
-msg_parent.classList.add("msg_parent");
 const loadMore = document.querySelector(".loadmore");
 const comment_form = document.querySelector("#msg_form");
 const comment_textarea = document.querySelector("#comment_form textarea");
+const search_form = document.querySelector("#search-form");
+const search_input = document.querySelector("#search-form input");
 
 let counter = 0;
 
 //msg_item_maker輸入參數為DB回傳的資料
-//Data type = array
+//userInfo的Data Type = object
+//mesCollection的Data Type = Array
 //array裡面的每個元素都是object
-function msg_item_maker(userInfo, msgColleciton) {
-  if (msgColleciton.length < 5) {
+function msg_item_maker(userInfo, msgCollection) {
+  const msg_parent = document.createElement("div");
+  msg_parent.classList.add("msg_parent");
+  if (msgCollection.length < 5) {
     loadMore.style.display = "none";
     // const msg_itme = document.createElement("div");
     // msg_itme.classList.add("msg-item");
@@ -21,26 +24,27 @@ function msg_item_maker(userInfo, msgColleciton) {
     // msg_parent.appendChild(msg_itme);
     // msg_ctn.appendChild(msg_parent);
   } else {
-    for (let i = 0; i < msgColleciton.length; i++) {
+    console.log("開始產生留言");
+    for (let i = 0; i < msgCollection.length; i++) {
       const msg_itme = document.createElement("div");
       msg_itme.classList.add("msg-item");
-      if (userInfo.id == msgColleciton[i].id) {
+      if (userInfo.id == msgCollection[i].id) {
         let template = `
         <div class="msg-left">	
             <img src="/pic/msg-person.png" alt="msg-person" />
-            <p>${msgColleciton[i].name}</p>	
+            <p>${msgCollection[i].name}</p>	
         </div>	
         <div class="msg-mid">	
             <p>	
-            ${msgColleciton[i].comment}	
+            ${msgCollection[i].comment}	
             </p>	
         </div>	
         <div class="msg-right">	
             <div class="msg-btn">	
-                <button class="edit-btn" msg_id = ${msgColleciton[i].msg_id}>edit</button>	
-                <button class="del-btn" msg_id = ${msgColleciton[i].msg_id}>del</button>	
+                <button class="edit-btn" msg_id = ${msgCollection[i].msg_id}>edit</button>	
+                <button class="del-btn" msg_id = ${msgCollection[i].msg_id}>del</button>	
             </div>	
-            <p>${msgColleciton[i].date}</p>	
+            <p>${msgCollection[i].date}</p>	
         </div>
     `;
         msg_itme.innerHTML = template;
@@ -49,15 +53,15 @@ function msg_item_maker(userInfo, msgColleciton) {
         let template = `
         <div class="msg-left">	
             <img src="/pic/msg-person.png" alt="msg-person" />
-            <p>${msgColleciton[i].name}</p>	
+            <p>${msgCollection[i].name}</p>	
         </div>	
         <div class="msg-mid">	
             <p>	
-            ${msgColleciton[i].comment}	
+            ${msgCollection[i].comment}	
             </p>	
         </div>	
         <div class="msg-right">	
-            <p>${msgColleciton[i].date}</p>	
+            <p>${msgCollection[i].date}</p>	
         </div>
     `;
         msg_itme.innerHTML = template;
@@ -131,5 +135,24 @@ loadMore.addEventListener("click", async () => {
 comment_form.addEventListener("submit", (e) => {
   if (!comment_textarea.value) {
     e.preventDefault();
+  }
+});
+
+search_form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  let search_member = search_input.value;
+  if (search_member) {
+    const response = await fetch(`/searchMemberMsg/${search_member}`);
+    const data = await response.json();
+
+    let { userInfo, msg } = data;
+    console.log(`前端接收到的userInfo= ${userInfo}`);
+    console.log(`前端接收到的msg= ${msg}`);
+    const msg_parent = document.querySelector(".msg_parent");
+    loadMore.style.display = "none";
+    msg_ctn.removeChild(msg_parent);
+    msg_item_maker(userInfo, msg);
+  } else {
+    window.location = "/member";
   }
 });
